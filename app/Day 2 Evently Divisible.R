@@ -5,17 +5,34 @@
 
 # -*-*-*-*-*-*-*-*-*-*-*-*
 myEventlyDivisible<-function(entry){
-  
-  dimention  = dim(entry)
-  numberRows = dimention[1]
   result     = 0
   
-  for (count in 1 : numberRows){
+# Loop lines
+  numberRows = dim(entry)[1]
+  for (lineNumber in 1 : numberRows){
+    currentLine = entry[lineNumber, ]
     
-    currentLine = entry[count, ]
-    rowsTotals = max(currentLine, na.rm = TRUE) - min(currentLine, na.rm = TRUE)
+    # Loop line items
+    numberItems = length(currentLine)
+    for (itemPosition in 1 : numberItems - 1)
+      currentItem = currentLine[itemPosition]
+      paste0('Current Item', currentItem)
+      #print(currentItem)
 
-    result = result + rowsTotals
+      for (neighborPosition in itemPosition + 1 : numberItems){
+        neighborItem = currentLine[neighborPosition]
+        
+        numbers <- c(currentItem, neighborItem)
+        #numbers <- c(3, 2)
+        as.integer(numbers)
+        numerator   = max(numbers)
+        denominator = min(numbers)
+        
+        quocient    = numerator / denominator
+        if (round(quocient) == quocient){
+          result = result + quocient
+        }
+      }
   }
   #Return value 
   result
@@ -78,3 +95,4 @@ myAssert.integer.equals(message, expected, actual)
 # 
 # message  = 'happy path'
 # myAssert.integer.equals(message, expected, actual)
+
