@@ -1,38 +1,35 @@
-#How to calculate Manhattan Distance in R?
-print("How to calculate Manhattan Distance in R?")
 
-fa <- c(5,2,1,4)
-fb <- c(5,5,4,2)
+myDetermineMatixSize<-function(entry){
+  
+  higherValue = 0
+  valueOfn    = 1
+  while (higherValue < entry) {
+  
+    higherValue = (valueOfn * valueOfn)
+    valueOfn = valueOfn + 1
+  }
+  valueOfn
+}
 
-fm <- matrix(c(fa,fb), byrow=T, nrow=2)
+mySpiralMatrix <- function(n) {
+  stopifnot(is.numeric(n))
+  stopifnot(n > 0)
+  steps <- c(1, n, -1, -n)
+  reps <- n - seq_len(n * 2 - 1L) %/% 2
+  indicies <- rep(rep_len(steps, length(reps)), reps)
+  indicies <- cumsum(indicies)
+  
+  values <- integer(length(indicies))
+  values[indicies] <- seq_along(indicies)
+  values = sort(values, decreasing = TRUE)
 
-col_names_vectors <- c("U1", "U2", "U3", "U4")
-row_names_vectors <- c("FilmA","FilmB")
+  matrix(values, n, n, byrow = TRUE)
+}
 
-colnames(fm) <- col_names_vectors
-rownames(fm) <- row_names_vectors
+#t = myDetermineMatixSize(368078)
+s = myDetermineMatixSize(23)
+m = mySpiralMatrix(s)
+initialPosition = s/2
 
-fm
-
-#Manhatan Distance based on vectors
-#dv1 <- abs(fa[1]-fa[4]) + abs(fb[1]-fb[4])
-#dv1
-
-#Manhattan Distance based on matrix
-
-#Distance from user1 (U1) to the new user
-d1 <- abs(fm[1,1]-fm[1,4]) + abs(fm[2,1]-fm[2,4])
-d1
-
-#Distance from user2 (U2) to the new user 
-d2 <- abs(fm[1,2]-fm[1,4]) + abs(fm[2,2]-fm[2,4])
-d2
-
-#Distance from user3 (U3) to the new user 
-d3 <- abs(fm[1,3]-fm[1,4]) + abs(fm[2,3]-fm[2,4])
-d3
-
-distance_vector <- c(d1,d2,d3)
-#Checking which distance is the smallest one
-min(distance_vector)
-#For the new user, system should recommend user1 (U1)
+print(paste0("Matrix size :", s,":",s))
+print(paste0("Initial position ", initialPosition,":", initialPosition  ))
