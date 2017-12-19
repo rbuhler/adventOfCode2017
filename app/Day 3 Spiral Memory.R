@@ -43,21 +43,75 @@ mySpiralMatrix <- function(n) {
   matrix(values, n, n, byrow = TRUE)
 }
 
-#368078
-input = 368078
+myManhattanDistance<-function(entry){
 
-s = myDetermineMatixSize(input)
-m = mySpiralMatrix(s)
+  s = myDetermineMatixSize(entry)
+  m = mySpiralMatrix(s)
+  
+  searchResult <- which(m==entry, arr.in=TRUE)
+  centerResult <- which(m==1, arr.in=TRUE)
+  
+  searchX <- searchResult[1,1]
+  searchY <- searchResult[1,2]
+  
+  centerX <- centerResult[1,1]
+  centery <- centerResult[1,2]
+  
+  return = (abs(centerX-searchX)+abs(centery-searchY))  
+  return
+}
 
-searchResult <- which(m==input, arr.in=TRUE)
-centerResult <- which(m==1, arr.in=TRUE)
+# # -*-*-*-*-*-*-*-*-*-*-*-*
+# # UNIT TESTING
+# # -*-*-*-*-*-*-*-*-*-*-*-*
+# # ASSERTS
 
-searchX <- searchResult[1,1]
-searchY <- searchResult[1,2]
+source('app/library/Assert.R')
 
-centerX <- centerResult[1,1]
-centery <- centerResult[1,2]
+# -*-*-*-*-*-*-*-*-*-*-*-*
+# VARIANTS
+# -*-*-*-*-*-*-*-*-*-*-*-*
+# 1
+entry = 1
 
-result = (abs(centerX-searchX)+abs(centery-searchY))  
+actual   = myManhattanDistance(entry)
+expected = 0
 
-print(paste0("Final : ", result))
+message  = 'Tip1'
+myAssert.integer.equals(message, expected, actual)
+
+# 2
+entry = 12
+
+actual   = myManhattanDistance(entry)
+expected = 3
+
+message  = 'Tip1'
+myAssert.integer.equals(message, expected, actual)
+
+# 3
+entry = 23
+
+actual   = myManhattanDistance(entry)
+expected = 2
+
+message  = 'Tip1'
+myAssert.integer.equals(message, expected, actual)
+
+# 4
+entry = 1024
+
+actual   = myManhattanDistance(entry)
+expected = 31
+
+message  = 'Tip1'
+myAssert.integer.equals(message, expected, actual)
+
+# 5
+entry = 368078
+
+actual   = myManhattanDistance(entry)
+expected = 371
+
+message  = 'Exercise'
+myAssert.integer.equals(message, expected, actual)
