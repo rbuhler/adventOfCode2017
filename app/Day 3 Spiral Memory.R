@@ -1,71 +1,63 @@
 
-# -*-*-*-*-*-*-*-*-*-*-*-*
-# SOLUTION LIBRARY
-# -*-*-*-*-*-*-*-*-*-*-*-*
-myCreateMatrix<-function(node){
+
+myArraySwap<-function(entry){
+  size <- length(entry)
+  pointer <- size
   
-  for(x in 1 : node){
+  return <- matrix(c(1))
+  
+  for(x in 1 : size){
+    return[x]<-entry[pointer]
+    pointer = pointer-1
+  }
+  return
+}
+
+
+myDetermineMatixSize<-function(entry){
+  higherValue = 0
+  return      = 0
+  while (higherValue < entry) {
+    return = return + 1
+    higherValue = (return * return)
     
   }
-  
+  return
 }
 
-
-# -*-*-*-*-*-*-*-*-*-*-*-*
-mySpiralMemory<-function(entry){
-  result = 0
-
+mySpiralMatrix <- function(n) {
+  stopifnot(is.numeric(n))
+  stopifnot(n > 0)
   
-  #Return value 
-  result
+  steps <- c(1, n, -1, -n)
+  reps <- n - seq_len(n * 2 - 1L) %/% 2
+  
+  indicies <- rep(rep_len(steps, length(reps)), reps)
+  indicies <- cumsum(indicies)
+  # custom development
+  indicies<-myArraySwap(indicies)
+  
+  values <- integer(length(indicies))
+  values[indicies] <- seq_along(indicies)
+  
+  matrix(values, n, n, byrow = TRUE)
 }
 
-# # -*-*-*-*-*-*-*-*-*-*-*-*
-# # UNIT TESTING
-# # -*-*-*-*-*-*-*-*-*-*-*-*
-# # ASSERTS
+#368078
+input = 368078
 
-source('app/library/Assert.R')
+s = myDetermineMatixSize(input)
+m = mySpiralMatrix(s)
 
-# -*-*-*-*-*-*-*-*-*-*-*-*
-# VARIANTS
-# -*-*-*-*-*-*-*-*-*-*-*-*
-# 1
-entry    = 1
-actual   = mySpiralMemory(entry)
-expected = 0
+searchResult <- which(m==input, arr.in=TRUE)
+centerResult <- which(m==1, arr.in=TRUE)
 
-message  = 'happy path 1'
-myAssert.integer.equals(message, expected, actual)
+searchX <- searchResult[1,1]
+searchY <- searchResult[1,2]
 
-# 2
-entry    = 12
-actual   = mySpiralMemory(entry)
-expected = 3
+centerX <- centerResult[1,1]
+centery <- centerResult[1,2]
 
-message  = 'happy path 2'
-myAssert.integer.equals(message, expected, actual)
+result = (abs(centerX-searchX)+abs(centery-searchY))  
 
-# 3
-entry    = 23
-actual   = mySpiralMemory(entry)
-expected = 2
-
-message  = 'happy path 3'
-myAssert.integer.equals(message, expected, actual)
-
-# 4
-entry    = 1024
-actual   = mySpiralMemory(entry)
-expected = 31
-
-message  = 'happy path 3'
-myAssert.integer.equals(message, expected, actual)
-
-# 5
-entry    = 368078
-actual   = mySpiralMemory(entry)
-expected = 0
-
-message  = 'Exercise'
-myAssert.integer.equals(message, expected, actual)
+print(paste0("Final : ", result))
