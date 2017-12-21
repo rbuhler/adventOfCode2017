@@ -19,8 +19,17 @@ mySpiralMatrix<-function(entry){
   for (count in 1 : matrixSize){
 
     # Steps
-    jx<-(jx*-1)+1
-    ky<-0
+    if(jx==1){
+      jx=-1
+    }else if(jx==-1){
+      jx=1
+    }
+    
+    if(jx==1){
+      ky=-1
+    }else if(jx==-1){
+      ky=1
+    }
     
     # Coordinates
     x<-0
