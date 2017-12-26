@@ -39,7 +39,7 @@ mySpiralMatrix<-function(entry){
   data<-data.frame(layer, direction, jx, ky)
 
   for (count in 1 : matrixSize){
-    
+
     if(loop==layer){
       print(paste0('Layer ', loop))
     }
