@@ -5,40 +5,60 @@ myCenterMatrix<-function(entry){
     
 }
 
+myRight<-function(entry){
+  
+}
+myUp<-function(entry){
+  
+}
+myLeft<-function(entry){
+  
+}
+myDown<-function(entry){
+  
+}
+myLayer<-function(entry){
+  
+  return<-(entry+2)
+  return
+}
+
 mySpiralMatrix<-function(entry){
   
   matrixDimX  = ceiling(sqrt(entry))
   matrixSize  = matrixDimX ^ 2
   
-  rounds=1
-  x<-0
-  y<-0
+  x<-matrixDimX
+  y<-matrixDimX
   jx<-0
-  ky<-1
+  ky<-0
+  layer<-0
+  loop<-1
+  direction<-''
+  
+  data<-data.frame(layer, direction, jx, ky)
 
   for (count in 1 : matrixSize){
-
-    # Steps
-    jx<-(jx*-1)+1
-    ky<-0
     
-    # Coordinates
-    x<-0
-    y<-0
-    
-    array<-c(1 : matrixSize)
-    myMatrix<-matrix(array, nrow=matrixDimX, ncol=matrixDimX, byrow = TRUE)
+    if(loop==layer){
+      print(paste0('Layer ', loop))
+    }
 
-  }
-  print(myMatrix)
-  myMatrix
-  
+    print(paste0('Step ', x, ':', y))
+
+    # Adjust the next Layer
+    loop<-loop-1
+    if(loop==0){
+      layer<-myLayer(layer)
+      loop<-layer
+    }
+
+    #array<-c(1 : matrixSize)
+    #myMatrix<-matrix(array, nrow=matrixDimX, ncol=matrixDimX, byrow = TRUE)
+
+  } # for
 }
 
 mySpiralMatrix(25)
 
-print()
-
-
-#print(paste0("Center ", myCenterMatrix(5)))
-#print(paste0("Center ", myCenterMatrix(608)))
+print('Done !')
