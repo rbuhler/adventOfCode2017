@@ -2,63 +2,104 @@
 myCenterMatrix<-function(entry){
   middle = ceiling(entry/2)
   middle
-    
 }
 
-myRight<-function(entry){
-  
+myUnclock<-function(entry){
+  if(entry=='RIGHT'){
+    return('UP')
+  } else if (entry=='UP'){
+    return('LEFT')
+  }else if(entry=='LEFT'){
+    return('DOWN')
+  }else if(entry=='DOWN'){
+    return('RIGHT')
+  }else{
+    return('RIGHT')
+  }
 }
-myUp<-function(entry){
+
+myNextCell<-function(entry){
   
-}
-myLeft<-function(entry){
+  df<-entry
   
-}
-myDown<-function(entry){
+  direct<-df['direction']  
+  posX<-df['x']
+  posY<-df['y']
   
+  if(direct=='RIGHT'){
+    posY<-posY+1
+    
+  } else if(direct=='UP'){
+    posX<-posX-1
+    
+  }else if(direct=='LEFT'){
+    posY<-posY-1
+    
+  }else if(direct=='DOWN'){
+    posX<-posX+1
+  }
+  
+  df['direction']<-direct
+  df['x']<-posX
+  df['y']<-posY
+  
+  return(df)
 }
+
 myLayer<-function(entry){
-  
   return<-(entry+2)
   return
 }
+
 
 mySpiralMatrix<-function(entry){
   
   matrixDimX  = ceiling(sqrt(entry))
   matrixSize  = matrixDimX ^ 2
   
-  x<-matrixDimX
-  y<-matrixDimX
-  jx<-0
-  ky<-0
+  x<-myCenterMatrix(matrixDimX)
+  y<-x
+  celValue<-0
+
   layer<-0
   loop<-1
   direction<-''
+  changeDirection<-0
+  arrayMatrix<-array(0, dim=c(matrixDimX, matrixDimX))
   
-  data<-data.frame(layer, direction, jx, ky)
+  dFrame<-data.frame(direction, x, y)
 
   for (count in 1 : matrixSize){
 
-    if(loop==layer){
-      print(paste0('Layer ', loop))
-    }
-
-    print(paste0('Step ', x, ':', y))
+    # Continuous values
+    celValue<-count
+    
+    arrayMatrix[as.integer(x) , as.integer(y)]<-celValue
 
     # Adjust the next Layer
     loop<-loop-1
     if(loop==0){
       layer<-myLayer(layer)
       loop<-layer
+      
+      direction<-myUnclock(direction)
+      changeDirection<-loop/2
     }
-
-    #array<-c(1 : matrixSize)
-    #myMatrix<-matrix(array, nrow=matrixDimX, ncol=matrixDimX, byrow = TRUE)
+    
+    # Change direction
+    if(loop==changeDirection){
+      direction<-myUnclock(direction)  
+    }
+    
+    dFrame['direction']<-direction
+    dFrame<-myNextCell(dFrame)
+    x<-dFrame['x']
+    y<-dFrame['y']
 
   } # for
+  return(arrayMatrix)
 }
 
-mySpiralMatrix(25)
+print(mySpiralMatrix(25))
 
 print('Done !')
