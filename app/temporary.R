@@ -74,6 +74,14 @@ mySpiralMatrix<-function(entry){
     # Continuous values
     celValue<-count
     
+    neighbourRight<-if((as.integer(y)+1)<=matrixDimX){as.integer(y)+1}else{as.integer(y)}
+    neighbourLeft<-if((as.integer(y)-1)>=1){as.integer(y)-1}else{as.integer(y)}
+    neighbourTop<-x-1
+    neighbourBottom<-x+1
+    
+    vRight<-arrayMatrix[as.integer(x), neighbourRight]
+    vLeft<-arrayMatrix[as.integer(x), neighbourLeft]
+    
     arrayMatrix[as.integer(x) , as.integer(y)]<-celValue
 
     # Adjust the next Layer
