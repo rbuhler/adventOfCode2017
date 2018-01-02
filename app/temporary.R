@@ -65,24 +65,29 @@ mySpiralMatrix<-function(entry){
   loop<-1
   direction<-''
   changeDirection<-0
-  arrayMatrix<-array(0, dim=c(matrixDimX, matrixDimX))
+  arrayMatrix<-as.matrix(array(as.integer(0), dim=c(matrixDimX, matrixDimX)))
   
   dFrame<-data.frame(direction, x, y)
 
   for (count in 1 : matrixSize){
 
+    neighbourRight<-if((y+1)<=matrixDimX){y+1}else{y}
+    neighbourLeft<-if((y-1)>=1){y-1}else{y}
+    neighbourTop<-if((x-1)>=1){x-1}else{x}
+    neighbourBottom<-if((x+1)<=matrixDimX){x+1}else{x}
+    
+    vRight<-arrayMatrix[x, neighbourRight]
+    vLeft<-arrayMatrix[x, neighbourLeft]
+    vTop<-arrayMatrix[neighbourTop, y]
+    vBottom<-arrayMatrix[neighbourBottom, y]
+    
     # Continuous values
-    celValue<-count
+    #celValue<-count
+    celValue<-vRight + vLeft + vTop + vBottom
+    # First cell
+    if(celValue==0){celValue=1}
     
-    neighbourRight<-if((as.integer(y)+1)<=matrixDimX){as.integer(y)+1}else{as.integer(y)}
-    neighbourLeft<-if((as.integer(y)-1)>=1){as.integer(y)-1}else{as.integer(y)}
-    neighbourTop<-x-1
-    neighbourBottom<-x+1
-    
-    vRight<-arrayMatrix[as.integer(x), neighbourRight]
-    vLeft<-arrayMatrix[as.integer(x), neighbourLeft]
-    
-    arrayMatrix[as.integer(x) , as.integer(y)]<-celValue
+    arrayMatrix[x , y]<-celValue
 
     # Adjust the next Layer
     loop<-loop-1
@@ -101,8 +106,8 @@ mySpiralMatrix<-function(entry){
     
     dFrame['direction']<-direction
     dFrame<-myNextCell(dFrame)
-    x<-dFrame['x']
-    y<-dFrame['y']
+    x<-as.integer(dFrame['x'])
+    y<-as.integer(dFrame['y'])
 
   } # for
   return(arrayMatrix)
