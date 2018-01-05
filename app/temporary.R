@@ -71,19 +71,65 @@ mySpiralMatrix<-function(entry){
 
   for (count in 1 : matrixSize){
 
-    neighbourRight<-if((y+1)<=matrixDimX){y+1}else{y}
-    neighbourLeft<-if((y-1)>=1){y-1}else{y}
-    neighbourTop<-if((x-1)>=1){x-1}else{x}
-    neighbourBottom<-if((x+1)<=matrixDimX){x+1}else{x}
+    # neighbourRight<-if((y+1)<=matrixDimX){y+1}else{y}
+    # neighbourLeft<-if((y-1)>=1){y-1}else{y}
+    # neighbourTop<-if((x-1)>=1){x-1}else{x}
+    # neighbourBottom<-if((x+1)<=matrixDimX){x+1}else{x}
+    neighbourRight<-y+1
+    neighbourLeft<-y-1
+    neighbourTop<-x-1
+    neighbourBottom<-x+1
     
-    vRight<-arrayMatrix[x, neighbourRight]
-    vLeft<-arrayMatrix[x, neighbourLeft]
-    vTop<-arrayMatrix[neighbourTop, y]
-    vBottom<-arrayMatrix[neighbourBottom, y]
-    
+    vRight<-0
+    vLeft<-0
+    vTop<-0
+    vBottom<-0
+    vNWest<-0
+    vNEast<-0
+    vSWest<-0
+    vSEast<-0
+
+# ----------------------------------------------------------------    
+    if(neighbourTop>=1){
+      vTop<-if(neighbourTop>=1){arrayMatrix[neighbourTop, y]}
+      
+      if(neighbourLeft>=1){
+        vNWest<-arrayMatrix[neighbourTop, neighbourLeft]  
+      }
+      if(neighbourRight<=matrixDimX){
+        vNEast<-arrayMatrix[neighbourTop, neighbourRight]   
+      }
+    }
+      
+    if(neighbourBottom<=matrixDimX){
+      vBottom<-arrayMatrix[neighbourBottom, y]
+      
+      if(neighbourLeft>=1){
+        vSWest<-arrayMatrix[neighbourBottom, neighbourLeft]
+      }      
+      if(neighbourRight<=matrixDimX){
+        vSEast<-arrayMatrix[neighbourBottom, neighbourRight] 
+      }      
+    }
+# ----------------------------------------------------------------    
+    if(neighbourLeft>=1){
+      vLeft<-if(neighbourLeft>=1){arrayMatrix[x, neighbourLeft]}  
+    }
+       
+    if(neighbourRight<=matrixDimX){
+      vRight<-arrayMatrix[x, neighbourRight]   
+    }
+# ----------------------------------------------------------------
+
     # Continuous values
     #celValue<-count
-    celValue<-vRight + vLeft + vTop + vBottom
+    celValue<-vRight + vLeft + vTop + vBottom +
+              vNWest + vNEast + vSWest + vSEast
+    
+    if(celValue > entry ){
+      print(paste0("Answer ", celValue))
+      break()
+    }
     # First cell
     if(celValue==0){celValue=1}
     
@@ -113,6 +159,7 @@ mySpiralMatrix<-function(entry){
   return(arrayMatrix)
 }
 
-print(mySpiralMatrix(25))
+target<-368078
 
-print('Done !')
+#print(mySpiralMatrix(target))
+mySpiralMatrix(target)
