@@ -1,129 +1,165 @@
-
-
-myArraySwap<-function(entry){
-  size <- length(entry)
-  pointer <- size
-  
-  return <- matrix(c(1))
-  
-  for(x in 1 : size){
-    return[x]<-entry[pointer]
-    pointer = pointer-1
-  }
-  return
+# Set up some input
+myCenterMatrix<-function(entry){
+  middle = ceiling(entry/2)
+  middle
 }
 
+myUnclock<-function(entry){
+  if(entry=='RIGHT'){
+    return('UP')
+  } else if (entry=='UP'){
+    return('LEFT')
+  }else if(entry=='LEFT'){
+    return('DOWN')
+  }else if(entry=='DOWN'){
+    return('RIGHT')
+  }else{
+    return('RIGHT')
+  }
+}
 
-myDetermineMatixSize<-function(entry){
-  higherValue = 0
-  return      = 0
-  while (higherValue < entry) {
-    return = return + 1
-    higherValue = (return * return)
+myNextCell<-function(entry){
+  
+  df<-entry
+  
+  direct<-df['direction']  
+  posX<-df['x']
+  posY<-df['y']
+  
+  if(direct=='RIGHT'){
+    posY<-posY+1
     
+  } else if(direct=='UP'){
+    posX<-posX-1
+    
+  }else if(direct=='LEFT'){
+    posY<-posY-1
+    
+  }else if(direct=='DOWN'){
+    posX<-posX+1
   }
+  
+  df['direction']<-direct
+  df['x']<-posX
+  df['y']<-posY
+  
+  return(df)
+}
+
+myLayer<-function(entry){
+  return<-(entry+2)
   return
 }
 
-mySpiralMatrix <- function(n) {
-  stopifnot(is.numeric(n))
-  stopifnot(n > 0)
+
+mySpiralMatrix<-function(entry){
   
-  steps <- c(1, n, -1, -n)
-  reps <- n - seq_len(n * 2 - 1L) %/% 2
+  matrixDimX  = ceiling(sqrt(entry))
+  matrixSize  = matrixDimX ^ 2
   
-  indicies <- rep(rep_len(steps, length(reps)), reps)
-  indicies <- cumsum(indicies)
-  # custom development
-  indicies<-myArraySwap(indicies)
+  x<-myCenterMatrix(matrixDimX)
+  y<-x
+  celValue<-0
   
-  values <- integer(length(indicies))
-  values[indicies] <- seq_along(indicies)
+  layer<-0
+  loop<-1
+  direction<-''
+  changeDirection<-0
+  arrayMatrix<-as.matrix(array(as.integer(0), dim=c(matrixDimX, matrixDimX)))
   
-  matrix(values, n, n, byrow = TRUE)
+  dFrame<-data.frame(direction, x, y)
+  
+  for (count in 1 : matrixSize){
+    
+    # neighbourRight<-if((y+1)<=matrixDimX){y+1}else{y}
+    # neighbourLeft<-if((y-1)>=1){y-1}else{y}
+    # neighbourTop<-if((x-1)>=1){x-1}else{x}
+    # neighbourBottom<-if((x+1)<=matrixDimX){x+1}else{x}
+    neighbourRight<-y+1
+    neighbourLeft<-y-1
+    neighbourTop<-x-1
+    neighbourBottom<-x+1
+    
+    vRight<-0
+    vLeft<-0
+    vTop<-0
+    vBottom<-0
+    vNWest<-0
+    vNEast<-0
+    vSWest<-0
+    vSEast<-0
+    
+    # ----------------------------------------------------------------    
+    if(neighbourTop>=1){
+      vTop<-if(neighbourTop>=1){arrayMatrix[neighbourTop, y]}
+      
+      if(neighbourLeft>=1){
+        vNWest<-arrayMatrix[neighbourTop, neighbourLeft]  
+      }
+      if(neighbourRight<=matrixDimX){
+        vNEast<-arrayMatrix[neighbourTop, neighbourRight]   
+      }
+    }
+    
+    if(neighbourBottom<=matrixDimX){
+      vBottom<-arrayMatrix[neighbourBottom, y]
+      
+      if(neighbourLeft>=1){
+        vSWest<-arrayMatrix[neighbourBottom, neighbourLeft]
+      }      
+      if(neighbourRight<=matrixDimX){
+        vSEast<-arrayMatrix[neighbourBottom, neighbourRight] 
+      }      
+    }
+    # ----------------------------------------------------------------    
+    if(neighbourLeft>=1){
+      vLeft<-if(neighbourLeft>=1){arrayMatrix[x, neighbourLeft]}  
+    }
+    
+    if(neighbourRight<=matrixDimX){
+      vRight<-arrayMatrix[x, neighbourRight]   
+    }
+    # ----------------------------------------------------------------
+    
+    # Continuous values
+    #celValue<-count
+    celValue<-vRight + vLeft + vTop + vBottom +
+      vNWest + vNEast + vSWest + vSEast
+    
+    if(celValue > entry ){
+      print(paste0("Answer ", celValue))
+      break()
+    }
+    # First cell
+    if(celValue==0){celValue=1}
+    
+    arrayMatrix[x , y]<-celValue
+    
+    # Adjust the next Layer
+    loop<-loop-1
+    if(loop==0){
+      layer<-myLayer(layer)
+      loop<-layer
+      
+      direction<-myUnclock(direction)
+      changeDirection<-loop/2
+    }
+    
+    # Change direction
+    if(loop==changeDirection){
+      direction<-myUnclock(direction)  
+    }
+    
+    dFrame['direction']<-direction
+    dFrame<-myNextCell(dFrame)
+    x<-as.integer(dFrame['x'])
+    y<-as.integer(dFrame['y'])
+    
+  } # for
+  return(arrayMatrix)
 }
 
+target<-368078
 
-myStressMatrix<-function(entry){
-  
-  x=0
-  y=0
-  j=0
-  k=0
-  stepsNumber = 1
-  
-  
-}
-
-myManhattanDistance<-function(entry){
-
-  s = myDetermineMatixSize(entry)
-  m = mySpiralMatrix(s)
-  
-  searchResult <- which(m==entry, arr.in=TRUE)
-  centerResult <- which(m==1, arr.in=TRUE)
-  
-  searchX <- searchResult[1,1]
-  searchY <- searchResult[1,2]
-  
-  centerX <- centerResult[1,1]
-  centery <- centerResult[1,2]
-  
-  return = (abs(centerX-searchX)+abs(centery-searchY))  
-  return
-}
-
-# # -*-*-*-*-*-*-*-*-*-*-*-*
-# # UNIT TESTING
-# # -*-*-*-*-*-*-*-*-*-*-*-*
-# # ASSERTS
-
-source('app/library/Assert.R')
-
-# -*-*-*-*-*-*-*-*-*-*-*-*
-# VARIANTS
-# -*-*-*-*-*-*-*-*-*-*-*-*
-# 1
-entry = 1
-
-actual   = myManhattanDistance(entry)
-expected = 0
-
-message  = 'Tip1'
-myAssert.integer.equals(message, expected, actual)
-
-# 2
-entry = 12
-
-actual   = myManhattanDistance(entry)
-expected = 3
-
-message  = 'Tip1'
-myAssert.integer.equals(message, expected, actual)
-
-# 3
-entry = 23
-
-actual   = myManhattanDistance(entry)
-expected = 2
-
-message  = 'Tip1'
-myAssert.integer.equals(message, expected, actual)
-
-# 4
-entry = 1024
-
-actual   = myManhattanDistance(entry)
-expected = 31
-
-message  = 'Tip1'
-myAssert.integer.equals(message, expected, actual)
-
-# 5
-entry = 368078
-
-actual   = myManhattanDistance(entry)
-expected = 371
-
-message  = 'Exercise'
-myAssert.integer.equals(message, expected, actual)
+#print(mySpiralMatrix(target))
+mySpiralMatrix(target)
